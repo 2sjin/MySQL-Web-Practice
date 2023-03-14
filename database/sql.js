@@ -15,13 +15,13 @@ const promisePool = pool.promise();
 
 const sql = {
 
-    // SQL: 섹션 테이블 전체 조회
+    // SQL 실행 함수: 섹션 테이블 전체 조회
     getSections : async () => {
         const [rows] = await promisePool.query(`SELECT * FROM sections`)
     return rows
     },
 
-    // SQL: 섹션(sections) 테이블과 식당(businesses) 테이블 join 결과 조회
+    // SQL 실행 함수: 섹션(sections) 테이블과 식당(businesses) 테이블 join 결과 조회
     getBusinessesJoined : async (query) => {
         const sqlQuery = `
         SELECT * FROM sections S
@@ -44,7 +44,7 @@ const sql = {
         return rows
     },
 
-    // 하나의 식당(businesses)에 대한 식당 및 세션 정보 조회
+    // SQL 실행 함수: 하나의 식당(businesses)에 대한 식당 및 세션 정보 조회
     getSingleBusinessJoined : async (business_id) => {
         const [rows] = await promisePool.query(`
           SELECT * FROM sections S
@@ -55,7 +55,7 @@ const sql = {
         return rows[0]
     },
     
-    // 하나의 식당에 대한 메뉴 정보 조회
+    // SQL 실행 함수: 하나의 식당에 대한 메뉴 정보 조회
     getMenusOfBusiness : async (business_id) => {
         const [rows] = await promisePool.query(`
             SELECT * FROM menus
@@ -64,7 +64,7 @@ const sql = {
         return rows
     },
     
-    // 하나의 식당에 대한 평점 정보 조회
+    // SQL 실행 함수: 하나의 식당에 대한 평점 정보 조회
     getRatingsOfBusiness : async (business_id) => {
         const [rows] = await promisePool.query(`
             SELECT rating_id, stars, comment,
@@ -77,7 +77,7 @@ const sql = {
         return rows
     },
 
-    // 하나의 식당에 대한 식당 이름 조회
+    // SQL 실행 함수: 하나의 식당에 대한 식당 이름 조회
     getSingleBusinessName : async (business_id) => {
         const [rows] = await promisePool.query(`
             SELECT business_name FROM businesses
@@ -87,7 +87,7 @@ const sql = {
         return rows[0]
     },
 
-    // 메뉴별 좋아요 수 업데이트
+    // SQL 실행 함수: 메뉴별 좋아요 수 업데이트
     updateMenuLikes : async (id, like) => {
         return await promisePool.query(`
             UPDATE menus
@@ -95,6 +95,24 @@ const sql = {
             WHERE menu_id = ${id}
         `)
     },
+
+    // SQL 실행 함수: 식당 별점 및 코멘트 추가
+    addRating : async (business_id, stars, comment) => {
+        return await promisePool.query(`
+            INSERT INTO ratings
+            (fk_business_id, stars, comment)
+            VALUES
+            (${business_id}, '${stars}', '${comment}')
+        `)
+    },
+    
+    // SQL 실행 함수: 식당 별점 및 코멘트 삭제
+    removeRating : async (rating_id) => {
+        return await promisePool.query(`
+            DELETE FROM ratings
+            WHERE rating_id = ${rating_id}
+        `)
+    }
 
 }
 
