@@ -38,7 +38,7 @@ const sql = {
             ${query.order 
             ? query.order : 'business_id'}
         `
-        console.log(sqlQuery)
+        console.log(sqlQuery)   // SQL 구문이 콘솔(터미널)에 출력됨
 
         const [rows] = await promisePool.query(sqlQuery)
         return rows
