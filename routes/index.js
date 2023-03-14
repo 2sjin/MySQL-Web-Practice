@@ -4,7 +4,7 @@ var router = express.Router();
 var sql = require('../database/sql')
 
 // 섹션 아이콘 목록
-const sectionIcons = ['🍚', '🍿', '🍜', '🍣', '🥩', '☕', '🍰']
+const sectionIcons = ['🍚', '🌭', '🍜', '🍣', '🥩', '☕', '🍰']
 
 // 식당 상태 맵
 const statusKorMap = {
