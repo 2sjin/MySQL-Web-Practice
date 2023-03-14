@@ -44,6 +44,37 @@ const sql = {
         return rows
     },
 
+    // 하나의 식당(businesses)에 대한 상세 정보 조회
+    getSingleBusinessJoined : async (business_id) => {
+        const [rows] = await promisePool.query(`
+          SELECT * FROM sections S
+          LEFT JOIN businesses B
+            ON S.section_id = B.fk_section_id
+          WHERE business_id = ${business_id}
+        `)
+        return rows[0]
+      },
+    
+      getMenusOfBusiness : async (business_id) => {
+        const [rows] = await promisePool.query(`
+          SELECT * FROM menus
+          WHERE fk_business_id = ${business_id}
+        `)
+        return rows
+      },
+    
+      getRatingsOfBusiness : async (business_id) => {
+        const [rows] = await promisePool.query(`
+          SELECT rating_id, stars, comment,
+          DATE_FORMAT(
+            created, '%y년 %m월 %d일 %p %h시 %i분 %s초'
+          ) AS created_fmt
+          FROM ratings
+          WHERE fk_business_id = ${business_id}
+        `)
+        return rows
+      },
+
 }
 
 module.exports = sql

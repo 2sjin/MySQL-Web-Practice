@@ -14,7 +14,7 @@ const statusKorMap = {
   RMD: '리모델링'
 }
 
-// 섹션 목록
+// 섹션 목록 호출(GET)
 router.get('/', async function(req, res, next) {
   const sections = await sql.getSections()
   sections.map((item) => {
@@ -27,7 +27,7 @@ router.get('/', async function(req, res, next) {
   });
 });
 
-// 섹션별 단순 식당 목록
+// 섹션별 식당 목록(단순 화면) 호출(GET)
 router.get('/biz-simple', async function(req, res, next) {
   const businesses = await sql.getBusinessesJoined(req.query)
   businesses.map((item) => {
@@ -41,7 +41,7 @@ router.get('/biz-simple', async function(req, res, next) {
   });
 });
 
-// 섹션별 고급 식당 목록
+// 섹션별 식당 목록(고급 화면) 호출(GET)
 router.get('/biz-adv', async function(req, res, next) {
   const businesses = await sql.getBusinessesJoined(req.query)
   businesses.map((item) => {
@@ -53,6 +53,22 @@ router.get('/biz-adv', async function(req, res, next) {
     title: '식당 목록(고급 화면)',
     q: req.query,
     businesses
+  });
+});
+
+// 식당 정보 상세페이지 호출(GET)
+router.get('/business/:id', async function(req, res, next) {
+  const biz = await sql.getSingleBusinessJoined(req.params.id)
+  biz.status_kor = statusKorMap[biz.status]
+  biz.icon = sectionIcons[biz.section_id - 1]
+
+  const menus = await sql.getMenusOfBusiness(req.params.id)
+  const ratings = await sql.getRatingsOfBusiness(req.params.id)
+
+  res.render('detail', { 
+    biz,
+    menus,
+    ratings
   });
 });
 
