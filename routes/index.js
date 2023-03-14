@@ -36,7 +36,7 @@ router.get('/biz-simple', async function(req, res, next) {
   })
 
   res.render('biz-simple', { 
-    title: '단순 식당 목록',
+    title: '식당 목록(단순 화면)',
     businesses
   });
 });
@@ -50,7 +50,7 @@ router.get('/biz-adv', async function(req, res, next) {
   })
 
   res.render('biz-adv', { 
-    title: '고급 식당 목록',
+    title: '식당 목록(고급 화면)',
     q: req.query,
     businesses
   });
