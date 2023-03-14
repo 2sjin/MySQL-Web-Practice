@@ -44,7 +44,7 @@ const sql = {
         return rows
     },
 
-    // 하나의 식당(businesses)에 대한 상세 정보 조회
+    // 하나의 식당(businesses)에 대한 식당 및 세션 정보 조회
     getSingleBusinessJoined : async (business_id) => {
         const [rows] = await promisePool.query(`
           SELECT * FROM sections S
@@ -53,27 +53,48 @@ const sql = {
           WHERE business_id = ${business_id}
         `)
         return rows[0]
-      },
+    },
     
-      getMenusOfBusiness : async (business_id) => {
+    // 하나의 식당에 대한 메뉴 정보 조회
+    getMenusOfBusiness : async (business_id) => {
         const [rows] = await promisePool.query(`
-          SELECT * FROM menus
-          WHERE fk_business_id = ${business_id}
+            SELECT * FROM menus
+            WHERE fk_business_id = ${business_id}
         `)
         return rows
-      },
+    },
     
-      getRatingsOfBusiness : async (business_id) => {
+    // 하나의 식당에 대한 평점 정보 조회
+    getRatingsOfBusiness : async (business_id) => {
         const [rows] = await promisePool.query(`
-          SELECT rating_id, stars, comment,
-          DATE_FORMAT(
-            created, '%y년 %m월 %d일 %p %h시 %i분 %s초'
-          ) AS created_fmt
-          FROM ratings
-          WHERE fk_business_id = ${business_id}
+            SELECT rating_id, stars, comment,
+            DATE_FORMAT(
+                created, '%y년 %m월 %d일 %p %h시 %i분 %s초'
+            ) AS created_fmt
+            FROM ratings
+            WHERE fk_business_id = ${business_id}
         `)
         return rows
-      },
+    },
+
+    // 하나의 식당에 대한 식당 이름 조회
+    getSingleBusinessName : async (business_id) => {
+        const [rows] = await promisePool.query(`
+            SELECT business_name FROM businesses
+            WHERE business_id = ${business_id}
+        `)
+        console.log(">>" + rows.business_id)
+        return rows[0]
+    },
+
+    // 메뉴별 좋아요 수 업데이트
+    updateMenuLikes : async (id, like) => {
+        return await promisePool.query(`
+            UPDATE menus
+            SET likes = likes + ${like}
+            WHERE menu_id = ${id}
+        `)
+    },
 
 }
 
